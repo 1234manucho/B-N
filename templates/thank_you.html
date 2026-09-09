@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Enquiry Received | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="status-page"><div class="status-card"><span class="status-icon"><i data-lucide="check"></i></span><span class="eyebrow"><span></span> Enquiry received</span><h1>Thank you. Your requirement is now with our team.</h1><p>We will review the details and contact you using the information you provided.</p><div><a href="{{ url_for('index') }}" class="button button--dark">Return home</a><a href="tel:{{ company.phone|replace(' ', '') }}" class="button button--outline">Call {{ company.phone }}</a></div></div></section>
+{% endblock %}
+

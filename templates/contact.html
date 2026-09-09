@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import field %}
+{% block title %}Request a Quote | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="contact-page">
+  <div class="shell contact-grid">
+    <aside class="contact-panel">
+      <span class="eyebrow eyebrow--light"><span></span> Contact B&N</span>
+      <h1>Let’s define the next move.</h1>
+      <p>Share the project, material or transport requirement. The more detail you provide, the more useful our first response can be.</p>
+      <div class="contact-list">
+        <a href="tel:{{ company.phone|replace(' ', '') }}"><i data-lucide="phone"></i><span><small>Call us</small>{{ company.phone }}<br>{{ company.phone_alt }}</span></a>
+        <a href="mailto:{{ company.email }}"><i data-lucide="mail"></i><span><small>Email us</small>{{ company.email }}</span></a>
+        <div><i data-lucide="map-pin"></i><span><small>Visit us</small>{{ company.address }}</span></div>
+      </div>
+      <div class="contact-note"><i data-lucide="clock-3"></i><p><b>Business enquiries</b><br>We aim to acknowledge complete enquiries within one business day.</p></div>
+    </aside>
+    <div class="form-card">
+      <div class="form-card__heading"><span>Project enquiry</span><h2>Tell us what you need.</h2><p>Fields marked with * are required.</p></div>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-grid">{{ field(form.full_name, 'Your name') }}{{ field(form.company, 'Company name') }}{{ field(form.email, 'you@company.com') }}{{ field(form.phone, '+254 ...') }}{{ field(form.service) }}{{ field(form.project_location, 'Town, county or country') }}</div>
+        {{ field(form.message, 'Include specifications, quantities, timeline and any delivery requirements.', 6) }}
+        <label class="check-field">{{ form.consent() }}<span>{{ form.consent.label.text }}</span></label>
+        {% if form.consent.errors %}<div class="field-error">{{ form.consent.errors[0] }}</div>{% endif %}
+        {{ form.submit(class_='button button--dark button--full') }}
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import service_card %}
+{% block title %}Construction, Materials & Logistics | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero__image" role="img" aria-label="Civil engineer reviewing plans at a construction site"></div>
+  <div class="hero__shade"></div>
+  <div class="shell hero__content">
+    <div class="hero__copy reveal">
+      <span class="eyebrow eyebrow--light"><span></span> Integrated project delivery</span>
+      <h1>Built to move<br><em>projects forward.</em></h1>
+      <p>Construction, material supply and coordinated logistics for demanding projects across East and Central Africa.</p>
+      <div class="hero__actions">
+        <a href="{{ url_for('contact') }}" class="button button--copper">Request a quote <i data-lucide="arrow-up-right"></i></a>
+        <a href="{{ url_for('services') }}" class="button button--ghost">Explore services</a>
+      </div>
+    </div>
+    <aside class="hero__note reveal" aria-label="Company overview">
+      <span>Established</span>
+      <strong>2017</strong>
+      <p>One accountable team from sourcing and construction through transport and site delivery.</p>
+    </aside>
+  </div>
+  <div class="hero__rail">
+    <div class="shell rail-grid">
+      <span><b>01</b> Engineer</span>
+      <span><b>02</b> Source</span>
+      <span><b>03</b> Transport</span>
+      <span><b>04</b> Deliver</span>
+    </div>
+  </div>
+</section>
+
+<section class="section intro-section">
+  <div class="shell intro-grid">
+    <div>
+      <span class="eyebrow"><span></span> The B&N approach</span>
+      <h2 class="display-title">One partner.<br>Every critical move.</h2>
+    </div>
+    <div class="intro-copy reveal">
+      <p class="lead">B&N Immo-Invest Limited brings construction expertise, dependable procurement and practical logistics under one roof.</p>
+      <p>We help clients reduce handover gaps between supplier, transporter and site team—protecting schedules, specifications and accountability at every stage.</p>
+      <a href="{{ url_for('about') }}" class="text-link">How we work <i data-lucide="arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--ink services-feature">
+  <div class="shell">
+    <div class="section-heading section-heading--light">
+      <div>
+        <span class="eyebrow eyebrow--light"><span></span> What we do</span>
+        <h2>Capabilities that connect.</h2>
+      </div>
+      <a href="{{ url_for('services') }}" class="button button--outline-light">View all services <i data-lucide="arrow-right"></i></a>
+    </div>
+    <div class="service-grid service-grid--dark">
+      {% for service in services[:4] %}{{ service_card(service) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="split-feature">
+  <div class="split-feature__image">
+    <img src="{{ url_for('static', filename='images/civil-works.jpg') }}" alt="Excavator operating on a building site" loading="lazy">
+    <span class="image-label">Civil & industrial works</span>
+  </div>
+  <div class="split-feature__content">
+    <span class="eyebrow"><span></span> Construction expertise</span>
+    <h2>Engineered for real-world performance.</h2>
+    <p>From heavy-duty foundations and steel structures to commercial spaces and site infrastructure, our teams focus on buildability, durability and safe execution.</p>
+    <ul class="check-list">
+      <li><i data-lucide="check"></i> Professional engineering oversight</li>
+      <li><i data-lucide="check"></i> Experienced technical workforce</li>
+      <li><i data-lucide="check"></i> Materials aligned to specification</li>
+      <li><i data-lucide="check"></i> Coordinated site delivery</li>
+    </ul>
+    <a href="{{ url_for('service_detail', slug='civil-engineering') }}" class="button button--dark">Explore construction <i data-lucide="arrow-up-right"></i></a>
+  </div>
+</section>
+
+<section class="section logistics-section">
+  <div class="shell logistics-card">
+    <div class="logistics-card__copy">
+      <span class="eyebrow eyebrow--light"><span></span> New integrated capability</span>
+      <h2>Materials do not create value until they reach the right site.</h2>
+      <p>Our transport and project-logistics service completes the procurement cycle with planned dispatch, coordinated loading, delivery documentation and site handover.</p>
+      <a href="{{ url_for('service_detail', slug='transport-logistics') }}" class="button button--copper">Explore logistics <i data-lucide="arrow-up-right"></i></a>
+    </div>
+    <div class="route-map" aria-label="Procurement to delivery process">
+      <div class="route-line"></div>
+      <div class="route-step"><span>01</span><i data-lucide="shopping-cart"></i><b>Order</b><small>Confirm requirements</small></div>
+      <div class="route-step"><span>02</span><i data-lucide="package-check"></i><b>Prepare</b><small>Check and schedule</small></div>
+      <div class="route-step"><span>03</span><i data-lucide="truck"></i><b>Move</b><small>Coordinate transport</small></div>
+      <div class="route-step"><span>04</span><i data-lucide="map-pin-check"></i><b>Deliver</b><small>Handover at site</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="section sectors-section">
+  <div class="shell">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow"><span></span> Where we work</span>
+        <h2>Built around your sector.</h2>
+      </div>
+      <p>Teams and supply plans are matched to the operating demands of each project environment.</p>
+    </div>
+    <div class="sector-list">
+      {% for sector in sectors %}
+        <a href="{{ url_for('contact') }}" class="sector-row reveal"><span>0{{ loop.index }}</span><strong>{{ sector }}</strong><i data-lucide="arrow-up-right"></i></a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="partner-strip">
+  <div class="shell">
+    <span class="partner-strip__label">Brands represented in our profile</span>
+    <div class="partner-names">
+      {% for partner in partners %}<span>{{ partner }}</span>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section cta-section">
+  <div class="shell cta-card">
+    <span class="eyebrow eyebrow--light"><span></span> Start a conversation</span>
+    <h2>Tell us what you are building, buying or moving.</h2>
+    <p>Share the specification, quantity, project location and required timeline. Our team will respond with the clearest next step.</p>
+    <a href="{{ url_for('contact') }}" class="button button--copper">Request a quote <i data-lucide="arrow-up-right"></i></a>
+  </div>
+</section>
+{% endblock %}
+

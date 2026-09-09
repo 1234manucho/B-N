@@ -1,0 +1,28 @@
+{% macro field(field, placeholder='', rows=None) %}
+  <div class="form-field">
+    {{ field.label }}
+    {% if rows %}
+      {{ field(class_='form-control', placeholder=placeholder, rows=rows) }}
+    {% else %}
+      {{ field(class_='form-control', placeholder=placeholder) }}
+    {% endif %}
+    {% if field.errors %}
+      <div class="field-error" role="alert">{{ field.errors[0] }}</div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro service_card(service) %}
+  <article class="service-card reveal">
+    <div class="service-card__top">
+      <span class="service-card__number">{{ service.number }}</span>
+      <span class="icon-chip"><i data-lucide="{{ service.icon }}"></i></span>
+    </div>
+    <h3>{{ service.title }}</h3>
+    <p>{{ service.short }}</p>
+    <a href="{{ url_for('service_detail', slug=service.slug) }}" class="text-link">
+      Explore service <i data-lucide="arrow-up-right"></i>
+    </a>
+  </article>
+{% endmacro %}
+

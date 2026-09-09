@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Partners | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="page-hero page-hero--compact"><div class="shell page-hero__grid"><div><span class="eyebrow eyebrow--light"><span></span> Our partners</span><h1>Relationships that support<br><em>reliable delivery.</em></h1></div><p>Our company profile identifies these established brands within the network supporting materials, equipment and project requirements.</p></div></section>
+<section class="section">
+  <div class="shell partner-page-grid">
+    {% for partner in partners %}<article class="partner-card reveal"><span>0{{ loop.index }}</span><strong>{{ partner }}</strong><p>Represented in the company profile.</p></article>{% endfor %}
+    <article class="partner-card partner-card--cta"><i data-lucide="handshake"></i><strong>Work with B&N</strong><p>Speak with our team about supply, distribution or project collaboration.</p><a href="{{ url_for('contact') }}" class="text-link">Start a conversation <i data-lucide="arrow-up-right"></i></a></article>
+  </div>
+</section>
+{% endblock %}
+

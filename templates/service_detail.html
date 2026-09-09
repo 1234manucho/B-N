@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ service.title }} | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="service-hero">
+  {% if service.image %}<div class="service-hero__image" style="background-image:url('{{ url_for('static', filename=service.image) }}')"></div>{% endif %}
+  <div class="service-hero__shade"></div>
+  <div class="shell service-hero__content">
+    <a href="{{ url_for('services') }}" class="back-link"><i data-lucide="arrow-left"></i> All services</a>
+    <span class="service-index">{{ service.number }}</span>
+    <div><span class="eyebrow eyebrow--light"><span></span> B&N capability</span><h1>{{ service.title }}</h1><p>{{ service.short }}</p></div>
+  </div>
+</section>
+<section class="section">
+  <div class="shell detail-grid">
+    <div><span class="eyebrow"><span></span> Service overview</span><h2 class="display-title">Practical support, shaped around the assignment.</h2></div>
+    <div class="detail-copy"><p class="lead">{{ service.summary }}</p><ul class="feature-list">{% for point in service.points %}<li><span>0{{ loop.index }}</span>{{ point }}</li>{% endfor %}</ul><a href="{{ url_for('contact', service=service.slug) }}" class="button button--dark">Discuss this service <i data-lucide="arrow-up-right"></i></a></div>
+  </div>
+</section>
+<section class="section section--sand">
+  <div class="shell"><div class="section-heading"><div><span class="eyebrow"><span></span> Connected capabilities</span><h2>Build a complete delivery plan.</h2></div></div><div class="related-grid">{% for item in related %}<a href="{{ url_for('service_detail', slug=item.slug) }}"><span>{{ item.number }}</span><i data-lucide="{{ item.icon }}"></i><h3>{{ item.title }}</h3><p>{{ item.short }}</p><b>Explore <i data-lucide="arrow-up-right"></i></b></a>{% endfor %}</div></div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import field %}
+{% block title %}Administration Sign In | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card"><img src="{{ url_for('static', filename='images/mark.svg') }}" alt=""><span class="eyebrow"><span></span> Secure administration</span><h1>Sign in</h1><p>Access the B&N enquiry workspace.</p><form method="post" novalidate>{{ form.hidden_tag() }}{{ field(form.email, 'admin@company.com') }}{{ field(form.password, 'Your password') }}<label class="check-field">{{ form.remember() }}<span>{{ form.remember.label.text }}</span></label>{{ form.submit(class_='button button--dark button--full') }}</form><a href="{{ url_for('index') }}" class="back-link back-link--dark"><i data-lucide="arrow-left"></i> Return to website</a></div></section>
+{% endblock %}
+

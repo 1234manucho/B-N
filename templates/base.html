@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1720">
+  <meta name="description" content="B&N Immo-Invest Limited provides civil engineering, construction, building-material supply, skilled workforce and project logistics across East and Central Africa.">
+  <title>{% block title %}B&N Immo-Invest Limited{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink: '#0b1720', copper: '#c7894b', sand: '#f2ece3' },
+          fontFamily: { sans: ['DM Sans', 'sans-serif'], display: ['Manrope', 'sans-serif'] }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <style>
+    /* Critical inline rules keep the first frame clean while the stylesheet loads. */
+    body { margin: 0; background: #f7f6f2; color: #14232c; }
+    [data-cloak] { display: none !important; }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body class="font-sans antialiased">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <div class="utility-bar">
+    <div class="shell utility-bar__inner">
+      <span>Construction · Supply · Logistics</span>
+      <div class="utility-links">
+        <a href="tel:{{ company.phone|replace(' ', '') }}"><i data-lucide="phone"></i>{{ company.phone }}</a>
+        <a href="mailto:{{ company.email }}"><i data-lucide="mail"></i>{{ company.email }}</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="shell nav-wrap">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="B&N Immo-Invest Limited home">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="B&N Immo-Invest Limited">
+      </a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">Home</a>
+        <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
+        <div class="nav-dropdown">
+          <a href="{{ url_for('services') }}" class="{{ 'active' if request.endpoint in ['services', 'service_detail'] else '' }}">Services <i data-lucide="chevron-down"></i></a>
+          <div class="nav-dropdown__menu">
+            {% for item in nav_services %}
+              <a href="{{ url_for('service_detail', slug=item.slug) }}">{{ item.title }}</a>
+            {% endfor %}
+            <a href="{{ url_for('services') }}" class="all-services">View all services <i data-lucide="arrow-right"></i></a>
+          </div>
+        </div>
+        <a href="{{ url_for('capabilities') }}" class="{{ 'active' if request.endpoint == 'capabilities' else '' }}">Capabilities</a>
+        <a href="{{ url_for('partners') }}" class="{{ 'active' if request.endpoint == 'partners' else '' }}">Partners</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="{{ url_for('contact') }}" class="button button--dark">Request a quote <i data-lucide="arrow-up-right"></i></a>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open navigation">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu" data-cloak>
+      <nav aria-label="Mobile navigation">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('services') }}">Services</a>
+        <a href="{{ url_for('capabilities') }}">Capabilities</a>
+        <a href="{{ url_for('partners') }}">Partners</a>
+        <a href="{{ url_for('contact') }}" class="button button--copper">Request a quote</a>
+      </nav>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack" aria-live="polite">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">{{ message }}<button aria-label="Dismiss message">×</button></div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div class="footer-brand">
+        <img src="{{ url_for('static', filename='images/logo-light.svg') }}" alt="B&N Immo-Invest Limited">
+        <p>An integrated construction, materials supply and project-logistics partner serving East and Central Africa.</p>
+        <a href="{{ url_for('contact') }}" class="text-link text-link--light">Discuss your requirement <i data-lucide="arrow-up-right"></i></a>
+      </div>
+      <div>
+        <h2>Company</h2>
+        <a href="{{ url_for('about') }}">About us</a>
+        <a href="{{ url_for('capabilities') }}">Capabilities</a>
+        <a href="{{ url_for('partners') }}">Partners</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+      </div>
+      <div>
+        <h2>Core services</h2>
+        {% for item in nav_services %}
+          <a href="{{ url_for('service_detail', slug=item.slug) }}">{{ item.title }}</a>
+        {% endfor %}
+      </div>
+      <div class="footer-contact">
+        <h2>Contact</h2>
+        <p>{{ company.address }}</p>
+        <a href="tel:{{ company.phone|replace(' ', '') }}">{{ company.phone }}</a>
+        <a href="tel:{{ company.phone_alt|replace(' ', '') }}">{{ company.phone_alt }}</a>
+        <a href="mailto:{{ company.email }}">{{ company.email }}</a>
+      </div>
+    </div>
+    <div class="shell footer-bottom">
+      <span>© {{ current_year }} {{ company.name }}. All rights reserved.</span>
+      <span>Built on integrity · Safety · Accountability</span>
+    </div>
+  </footer>
+
+  <a class="whatsapp-button" href="https://wa.me/254705540754" target="_blank" rel="noopener" aria-label="Chat with B&N Immo-Invest Limited on WhatsApp">
+    <i data-lucide="message-circle"></i><span>WhatsApp</span>
+  </a>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="{{ url_for('static', filename='js/site.js') }}"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 1.8 } });
+      document.documentElement.classList.add('js-ready');
+    });
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+

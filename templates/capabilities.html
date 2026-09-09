@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Capabilities & Sectors | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="page-hero page-hero--compact"><div class="shell page-hero__grid"><div><span class="eyebrow eyebrow--light"><span></span> Capabilities</span><h1>Built for demanding<br><em>project environments.</em></h1></div><p>We assemble the right technical, trade, supply and logistics resources for the sector, site and programme.</p></div></section>
+<section class="section">
+  <div class="shell capability-grid">
+    {% set icons = ['house', 'landmark', 'factory', 'route', 'hotel', 'warehouse'] %}
+    {% for sector in sectors %}<article class="capability-card reveal"><span>0{{ loop.index }}</span><i data-lucide="{{ icons[loop.index0] }}"></i><h2>{{ sector }}</h2><p>Coordinated people, inputs and delivery planning aligned to the operational needs of {{ sector|lower }}.</p><a href="{{ url_for('contact') }}" class="text-link">Discuss a requirement <i data-lucide="arrow-up-right"></i></a></article>{% endfor %}
+  </div>
+</section>
+<section class="section section--ink competence-band"><div class="shell competence-grid"><div><span class="eyebrow eyebrow--light"><span></span> How we add value</span><h2>Strong interfaces make stronger projects.</h2></div><ul><li><span>01</span><b>Technical coordination</b><p>Aligning scope, buildability and delivery requirements.</p></li><li><span>02</span><b>Procurement discipline</b><p>Clear specifications and dependable supplier coordination.</p></li><li><span>03</span><b>Site-ready logistics</b><p>Sequenced movement and confirmed handover of materials.</p></li></ul></div></section>
+<section class="section cta-section"><div class="shell cta-card"><span class="eyebrow eyebrow--light"><span></span> Plan the next move</span><h2>Talk to a team that sees the whole delivery chain.</h2><p>Share your scope, project location and timeline to start a practical discussion.</p><a href="{{ url_for('contact') }}" class="button button--copper">Contact B&N <i data-lucide="arrow-up-right"></i></a></div></section>
+{% endblock %}
+

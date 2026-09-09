@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import service_card %}
+{% block title %}Services | B&N Immo-Invest Limited{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="shell page-hero__grid">
+    <div><span class="eyebrow eyebrow--light"><span></span> Our services</span><h1>From the first plan<br><em>to final delivery.</em></h1></div>
+    <p>Integrated support across engineering, construction, skilled labour, procurement and transport—structured around the realities of your project.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="shell service-grid service-grid--light">
+    {% for service in services %}{{ service_card(service) }}{% endfor %}
+  </div>
+</section>
+<section class="section section--sand process-section">
+  <div class="shell">
+    <div class="section-heading"><div><span class="eyebrow"><span></span> Our process</span><h2>A clear path from brief to handover.</h2></div><p>Each engagement is scaled to the project, while keeping responsibility and communication clear.</p></div>
+    <div class="process-grid">
+      <article><span>01</span><h3>Define</h3><p>We review your scope, specifications, location, programme and commercial requirements.</p></article>
+      <article><span>02</span><h3>Plan</h3><p>We align technical resources, sourcing, transport requirements and delivery milestones.</p></article>
+      <article><span>03</span><h3>Execute</h3><p>Our teams coordinate the work, supply or movement with practical oversight.</p></article>
+      <article><span>04</span><h3>Confirm</h3><p>We document delivery, handover and any agreed next-phase requirements.</p></article>
+    </div>
+  </div>
+</section>
+<section class="section cta-section"><div class="shell cta-card"><span class="eyebrow eyebrow--light"><span></span> Need a tailored scope?</span><h2>Combine services around one project.</h2><p>Construction, supply and logistics can be coordinated as one connected delivery plan.</p><a href="{{ url_for('contact') }}" class="button button--copper">Request a proposal <i data-lucide="arrow-up-right"></i></a></div></section>
+{% endblock %}
+
