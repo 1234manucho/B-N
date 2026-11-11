@@ -32,9 +32,11 @@
 <body class="font-sans antialiased">
   <a class="skip-link" href="#main-content">Skip to content</a>
 
+  {% set ep = request.endpoint %}
+
   <div class="utility-bar">
     <div class="shell utility-bar__inner">
-      <span>Construction · Supply · Logistics</span>
+      <span>Construction · Supply · Logistics · Est. 2025</span>
       <div class="utility-links">
         <a href="tel:{{ company.phone|replace(' ', '') }}"><i data-lucide="phone"></i>{{ company.phone }}</a>
         <a href="mailto:{{ company.email }}"><i data-lucide="mail"></i>{{ company.email }}</a>
@@ -47,21 +49,42 @@
       <a href="{{ url_for('index') }}" class="brand" aria-label="B&N Immo-Invest Limited home">
         <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="B&N Immo-Invest Limited">
       </a>
+
       <nav class="desktop-nav" aria-label="Primary navigation">
-        <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">Home</a>
-        <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' else '' }}">About</a>
+        <a href="{{ url_for('index') }}"
+           class="{{ 'active' if ep == 'index' else '' }}"
+           {% if ep == 'index' %}aria-current="page"{% endif %}>Home</a>
+
+        <a href="{{ url_for('about') }}"
+           class="{{ 'active' if ep == 'about' else '' }}"
+           {% if ep == 'about' %}aria-current="page"{% endif %}>About</a>
+
         <div class="nav-dropdown">
-          <a href="{{ url_for('services') }}" class="{{ 'active' if request.endpoint in ['services', 'service_detail'] else '' }}">Services <i data-lucide="chevron-down"></i></a>
+          <a href="{{ url_for('services') }}"
+             class="{{ 'active' if ep in ['services', 'service_detail'] else '' }}"
+             {% if ep == 'services' %}aria-current="page"{% endif %}>Services <i data-lucide="chevron-down"></i></a>
           <div class="nav-dropdown__menu">
             {% for item in nav_services %}
-              <a href="{{ url_for('service_detail', slug=item.slug) }}">{{ item.title }}</a>
+              <a href="{{ url_for('service_detail', slug=item.slug) }}"
+                 {% if ep == 'service_detail' and request.view_args.get('slug') == item.slug %}aria-current="page"{% endif %}>{{ item.title }}</a>
             {% endfor %}
             <a href="{{ url_for('services') }}" class="all-services">View all services <i data-lucide="arrow-right"></i></a>
           </div>
         </div>
-        <a href="{{ url_for('capabilities') }}" class="{{ 'active' if request.endpoint == 'capabilities' else '' }}">Capabilities</a>
-        <a href="{{ url_for('partners') }}" class="{{ 'active' if request.endpoint == 'partners' else '' }}">Partners</a>
+
+        <a href="{{ url_for('capabilities') }}"
+           class="{{ 'active' if ep == 'capabilities' else '' }}"
+           {% if ep == 'capabilities' %}aria-current="page"{% endif %}>Capabilities</a>
+
+        <a href="{{ url_for('partners') }}"
+           class="{{ 'active' if ep == 'partners' else '' }}"
+           {% if ep == 'partners' %}aria-current="page"{% endif %}>Partners</a>
+
+        <a href="{{ url_for('contact') }}"
+           class="{{ 'active' if ep == 'contact' else '' }}"
+           {% if ep == 'contact' %}aria-current="page"{% endif %}>Contact</a>
       </nav>
+
       <div class="nav-actions">
         <a href="{{ url_for('contact') }}" class="button button--dark">Request a quote <i data-lucide="arrow-up-right"></i></a>
         <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open navigation">
@@ -69,13 +92,15 @@
         </button>
       </div>
     </div>
+
     <div class="mobile-menu" id="mobileMenu" data-cloak>
       <nav aria-label="Mobile navigation">
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('about') }}">About</a>
-        <a href="{{ url_for('services') }}">Services</a>
-        <a href="{{ url_for('capabilities') }}">Capabilities</a>
-        <a href="{{ url_for('partners') }}">Partners</a>
+        <a href="{{ url_for('index') }}" class="{{ 'active' if ep == 'index' else '' }}">Home</a>
+        <a href="{{ url_for('about') }}" class="{{ 'active' if ep == 'about' else '' }}">About</a>
+        <a href="{{ url_for('services') }}" class="{{ 'active' if ep in ['services', 'service_detail'] else '' }}">Services</a>
+        <a href="{{ url_for('capabilities') }}" class="{{ 'active' if ep == 'capabilities' else '' }}">Capabilities</a>
+        <a href="{{ url_for('partners') }}" class="{{ 'active' if ep == 'partners' else '' }}">Partners</a>
+        <a href="{{ url_for('contact') }}" class="{{ 'active' if ep == 'contact' else '' }}">Contact</a>
         <a href="{{ url_for('contact') }}" class="button button--copper">Request a quote</a>
       </nav>
     </div>
@@ -124,7 +149,7 @@
       </div>
     </div>
     <div class="shell footer-bottom">
-      <span>© {{ current_year }} {{ company.name }}. All rights reserved.</span>
+      <span>© {{ current_year }} {{ company.name }}. All rights reserved. Established 2025.</span>
       <span>Built on integrity · Safety · Accountability</span>
     </div>
   </footer>
@@ -144,4 +169,3 @@
   {% block scripts %}{% endblock %}
 </body>
 </html>
-
