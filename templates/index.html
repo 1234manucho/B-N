@@ -1,50 +1,472 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import service_card %}
 {% block title %}Construction, Materials & Logistics | B&N Immo-Invest Limited{% endblock %}
+
+{% block head %}
+<style>
+/* =================================================================
+   Homepage redesign — scoped under bn- prefix.
+   ================================================================= */
+
+/* ---------- 1. Hero ---------- */
+.bn-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(2.75rem, 6vw, 5.5rem) 0 clamp(2.5rem, 5vw, 4.5rem);
+  background:
+    radial-gradient(90% 120% at 82% 10%, #16313f 0%, rgba(11,23,32,0) 62%),
+    radial-gradient(70% 90% at 6% 94%, rgba(199,137,75,.13) 0%, rgba(11,23,32,0) 62%),
+    linear-gradient(160deg, #0b1720 0%, #0a1420 55%, #070f16 100%);
+  color: #f4f1ea;
+}
+.bn-hero__grid {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(75% 75% at 50% 42%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(75% 75% at 50% 42%, #000 0%, transparent 78%);
+}
+.bn-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+.bn-hero__title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5.4vw, 4.25rem);
+  line-height: 1.03;
+  letter-spacing: -.02em;
+  margin: 1rem 0 1.15rem;
+}
+.bn-hero__title em { font-style: normal; color: #e3a970; }
+.bn-hero__lead {
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.65;
+  color: rgba(244,241,234,.78);
+  margin: 0 0 1.75rem;
+}
+.bn-hero__actions { display: flex; flex-wrap: wrap; gap: .85rem; }
+.bn-hero__facts {
+  display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem;
+  margin: 2.25rem 0 0; padding: 1.5rem 0 0;
+  list-style: none;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.bn-hero__facts b {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem; font-weight: 700; color: #fff;
+}
+.bn-hero__facts span {
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(244,241,234,.55);
+}
+.bn-hero__visual { display: grid; place-items: center; }
+
+/* ---------- 2. Rotating globe ---------- */
+.bn-globe {
+  --size: clamp(250px, 33vw, 400px);
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  margin-inline: auto;
+  perspective: 1100px;
+  perspective-origin: 50% 45%;
+}
+.bn-globe__halo {
+  position: absolute; inset: -18%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(199,137,75,.22) 0%, rgba(199,137,75,0) 68%);
+  filter: blur(14px);
+  animation: bn-halo-pulse 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.bn-globe__silhouette {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(199,137,75,.55);
+  box-shadow:
+    0 0 60px -12px rgba(199,137,75,.5),
+    inset 0 0 44px rgba(199,137,75,.14);
+  pointer-events: none;
+}
+.bn-globe__stage {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  animation: bn-globe-spin 30s linear infinite;
+  will-change: transform;
+}
+.bn-globe__ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(199,137,75,.32);
+  transform: rotateY(calc(var(--i) * 30deg));
+}
+.bn-globe__lat {
+  position: absolute;
+  inset: calc((1 - var(--s)) * 50%);
+  border-radius: 50%;
+  border: 1px solid rgba(199,137,75,.2);
+  transform: rotateX(90deg) translateZ(calc(var(--size) * var(--t)));
+}
+.bn-globe__pin {
+  position: absolute; inset: 0;
+  transform:
+    rotateY(calc(var(--lon) * 1deg))
+    rotateX(calc(var(--lat) * -1deg))
+    translateZ(calc(var(--size) / 2));
+}
+.bn-globe__pin::before {
+  content: "";
+  position: absolute; top: 50%; left: 50%;
+  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: #f0b476;
+  box-shadow: 0 0 0 4px rgba(199,137,75,.16), 0 0 14px 3px rgba(240,180,118,.75);
+}
+.bn-globe__orbit {
+  position: absolute; inset: -7%;
+  border-radius: 50%;
+  border: 1px dashed rgba(199,137,75,.3);
+  animation: bn-orbit-spin 22s linear infinite;
+}
+.bn-globe__face {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, rgba(199,137,75,.12), transparent 56%);
+  box-shadow: inset 0 0 52px rgba(199,137,75,.18);
+  pointer-events: none;
+}
+@keyframes bn-globe-spin { to { transform: rotateY(360deg); } }
+@keyframes bn-orbit-spin {
+  from { transform: rotateX(72deg) rotateZ(0deg); }
+  to   { transform: rotateX(72deg) rotateZ(360deg); }
+}
+@keyframes bn-halo-pulse {
+  0%, 100% { opacity: .55; transform: scale(.96); }
+  50%      { opacity: 1;   transform: scale(1.04); }
+}
+
+/* ---------- 3. Credentials strip ---------- */
+.bn-stats { background: #fff; border-bottom: 1px solid rgba(11,23,32,.09); }
+.bn-stats__inner {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(11,23,32,.09);
+}
+.bn-stats__item { background: #fff; padding: 1.6rem 1.25rem; }
+.bn-stats__item b {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  color: #0b1720; line-height: 1.1;
+}
+.bn-stats__item span {
+  display: block; margin-top: .35rem;
+  font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #6b7b85;
+}
+
+/* ---------- 4. Approach pillars ---------- */
+.bn-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 1.1rem;
+  margin-top: 2.75rem;
+}
+.bn-pillar {
+  position: relative;
+  padding: 1.65rem 1.4rem;
+  border: 1px solid rgba(11,23,32,.1);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fff, #fbfaf7);
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.bn-pillar:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199,137,75,.5);
+  box-shadow: 0 26px 48px -34px rgba(11,23,32,.55);
+}
+.bn-pillar__num {
+  font-family: 'Manrope', sans-serif;
+  font-size: .75rem; font-weight: 700; letter-spacing: .16em; color: #c7894b;
+}
+.bn-pillar h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.1rem; color: #0b1720;
+  margin: .55rem 0 .45rem;
+}
+.bn-pillar p { margin: 0; font-size: .93rem; line-height: 1.6; color: #5a6b75; }
+
+/* ---------- 5. Advisory ---------- */
+.bn-advisory {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.bn-advisory::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(70% 80% at 92% 8%, rgba(199,137,75,.14), transparent 65%),
+    radial-gradient(60% 70% at 5% 92%, rgba(11,23,32,.05), transparent 65%),
+    #f2ece3;
+  pointer-events: none;
+}
+.bn-advisory__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem 4rem;
+  align-items: end;
+  margin-bottom: 2.75rem;
+}
+.bn-advisory__head .display-title { margin: .6rem 0 0; }
+.bn-advisory__lead {
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  line-height: 1.65;
+  color: #3a4a54;
+  margin: 0;
+  max-width: 52ch;
+}
+.bn-advisory__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.bn-advisory__card {
+  position: relative;
+  background: #fff;
+  border-radius: 18px;
+  padding: 2rem 1.65rem;
+  border: 1px solid rgba(11,23,32,.08);
+  box-shadow: 0 24px 48px -40px rgba(11,23,32,.5);
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+  overflow: hidden;
+}
+.bn-advisory__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199,137,75,.5);
+  box-shadow: 0 30px 60px -40px rgba(11,23,32,.6);
+}
+.bn-advisory__card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c7894b, rgba(199,137,75,0));
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.bn-advisory__card:hover::before { opacity: 1; }
+.bn-advisory__num {
+  font-family: 'Manrope', sans-serif;
+  font-size: .78rem; font-weight: 700; letter-spacing: .16em;
+  color: #c7894b;
+  display: block;
+  margin-bottom: .85rem;
+}
+.bn-advisory__card h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.22rem;
+  color: #0b1720;
+  margin: 0 0 .7rem;
+  line-height: 1.25;
+}
+.bn-advisory__card p {
+  margin: 0;
+  font-size: .94rem;
+  line-height: 1.65;
+  color: #556673;
+}
+.bn-advisory__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  background: rgba(255,255,255,.7);
+  border: 1px solid rgba(11,23,32,.08);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+}
+.bn-advisory__audience {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+.bn-advisory__audience > span {
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #6b7b85;
+  font-weight: 600;
+}
+.bn-advisory__audience ul {
+  display: flex;
+  gap: .5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.bn-advisory__audience li {
+  display: inline-flex;
+  align-items: center;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+  background: rgba(11,23,32,.05);
+  border: 1px solid rgba(11,23,32,.08);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: .82rem;
+  color: #0b1720;
+  letter-spacing: .01em;
+}
+
+/* ---------- Responsive + motion ---------- */
+@media (max-width: 960px) {
+  .bn-advisory__grid { grid-template-columns: 1fr; }
+  .bn-advisory__head { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+@media (max-width: 900px) {
+  .bn-hero__inner { grid-template-columns: 1fr; }
+  .bn-hero__title { font-size: clamp(2.15rem, 8.5vw, 3.1rem); }
+  .bn-globe { --size: clamp(220px, 62vw, 320px); margin-top: 1rem; }
+}
+@media (max-width: 720px) {
+  .bn-stats__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bn-advisory__foot { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bn-globe__stage,
+  .bn-globe__orbit,
+  .bn-globe__halo { animation: none !important; }
+  .bn-pillar,
+  .bn-advisory__card { transition: none; }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="hero">
-  <div class="hero__image" role="img" aria-label="Civil engineer reviewing plans at a construction site"></div>
-  <div class="hero__shade"></div>
-  <div class="shell hero__content">
-    <div class="hero__copy reveal">
-      <span class="eyebrow eyebrow--light"><span></span> Integrated project delivery</span>
-      <h1>Built to move<br><em>projects forward.</em></h1>
-      <p>Construction, material supply and coordinated logistics for demanding projects across East and Central Africa.</p>
-      <div class="hero__actions">
+
+<!-- ============ 1. HERO ============ -->
+<section class="bn-hero">
+  <div class="bn-hero__grid" aria-hidden="true"></div>
+  <div class="shell bn-hero__inner">
+
+    <div class="bn-hero__copy reveal">
+      <span class="eyebrow eyebrow--light"><span></span> Integrated project delivery · Est. 2025</span>
+      <h1 class="bn-hero__title">Built to move<br><em>projects forward.</em></h1>
+      <p class="bn-hero__lead">Construction, material supply, project advisory and coordinated logistics for demanding investments across East and Central Africa.</p>
+      <div class="bn-hero__actions">
         <a href="{{ url_for('contact') }}" class="button button--copper">Request a quote <i data-lucide="arrow-up-right"></i></a>
         <a href="{{ url_for('services') }}" class="button button--ghost">Explore services</a>
       </div>
+      <ul class="bn-hero__facts">
+        <li><b>2025</b><span>Established</span></li>
+        <li><b>East &amp; Central</b><span>Africa coverage</span></li>
+        <li><b>One team</b><span>Assess to site</span></li>
+      </ul>
     </div>
-    <aside class="hero__note reveal" aria-label="Company overview">
-      <span>Established</span>
-      <strong>2025</strong>
-      <p>One accountable team from sourcing and construction through transport and site delivery.</p>
-    </aside>
+
+    <div class="bn-hero__visual reveal">
+      <div class="bn-globe" role="img" aria-label="Rotating globe highlighting East and Central Africa">
+        <span class="bn-globe__halo" aria-hidden="true"></span>
+        <span class="bn-globe__silhouette" aria-hidden="true"></span>
+
+        <div class="bn-globe__stage" aria-hidden="true">
+          <div class="bn-globe__ring" style="--i:0"></div>
+          <div class="bn-globe__ring" style="--i:1"></div>
+          <div class="bn-globe__ring" style="--i:2"></div>
+          <div class="bn-globe__ring" style="--i:3"></div>
+          <div class="bn-globe__ring" style="--i:4"></div>
+          <div class="bn-globe__ring" style="--i:5"></div>
+
+          <div class="bn-globe__lat" style="--s:1;    --t:0"></div>
+          <div class="bn-globe__lat" style="--s:.866; --t:-.25"></div>
+          <div class="bn-globe__lat" style="--s:.866; --t:.25"></div>
+          <div class="bn-globe__lat" style="--s:.5;   --t:-.433"></div>
+          <div class="bn-globe__lat" style="--s:.5;   --t:.433"></div>
+
+          <div class="bn-globe__pin" style="--lon:36.8; --lat:-1.3"></div>
+          <div class="bn-globe__pin" style="--lon:15.3; --lat:-4.3"></div>
+          <div class="bn-globe__pin" style="--lon:32.5; --lat:15.6"></div>
+          <div class="bn-globe__pin" style="--lon:3.4;  --lat:6.5"></div>
+
+          <div class="bn-globe__orbit"></div>
+        </div>
+
+        <span class="bn-globe__face" aria-hidden="true"></span>
+      </div>
+    </div>
+
   </div>
-  <div class="hero__rail">
-    <div class="shell rail-grid">
-      <span><b>01</b> Engineer</span>
-      <span><b>02</b> Source</span>
-      <span><b>03</b> Transport</span>
-      <span><b>04</b> Deliver</span>
+</section>
+
+<!-- ============ 2. CREDENTIALS ============ -->
+<section class="bn-stats">
+  <div class="shell">
+    <div class="bn-stats__inner">
+      <div class="bn-stats__item"><b>2025</b><span>Year established</span></div>
+      <div class="bn-stats__item"><b>4</b><span>Integrated service lines</span></div>
+      <div class="bn-stats__item"><b>2</b><span>Regions served</span></div>
+      <div class="bn-stats__item"><b>1</b><span>Accountable partner</span></div>
     </div>
   </div>
 </section>
 
+<!-- ============ 3. APPROACH ============ -->
 <section class="section intro-section">
-  <div class="shell intro-grid">
-    <div>
-      <span class="eyebrow"><span></span> The B&N approach</span>
-      <h2 class="display-title">One partner.<br>Every critical move.</h2>
+  <div class="shell">
+    <div class="intro-grid">
+      <div>
+        <span class="eyebrow"><span></span> The B&amp;N approach</span>
+        <h2 class="display-title">One partner.<br>Every critical move.</h2>
+      </div>
+      <div class="intro-copy reveal">
+        <p class="lead">B&amp;N Immo-Invest Limited was established in 2025 to bring investment advisory, construction expertise, dependable procurement and practical logistics under one roof.</p>
+        <p>We help clients close the gaps between analysis, supplier, transporter and site team—protecting schedules, specifications and accountability at every stage of a project.</p>
+        <a href="{{ url_for('about') }}" class="text-link">How we work <i data-lucide="arrow-right"></i></a>
+      </div>
     </div>
-    <div class="intro-copy reveal">
-      <p class="lead">B&amp;N Immo-Invest Limited was established in 2025 to bring construction expertise, dependable procurement and practical logistics under one roof.</p>
-      <p>We help clients close the gaps between supplier, transporter and site team—protecting schedules, specifications and accountability at every stage of a project.</p>
-      <a href="{{ url_for('about') }}" class="text-link">How we work <i data-lucide="arrow-right"></i></a>
+
+    <div class="bn-pillars">
+      <article class="bn-pillar reveal">
+        <span class="bn-pillar__num">01</span>
+        <h3>Assess</h3>
+        <p>Studies and analysis that establish whether a project makes sense before capital is committed.</p>
+      </article>
+      <article class="bn-pillar reveal">
+        <span class="bn-pillar__num">02</span>
+        <h3>Engineer</h3>
+        <p>Specifications, quantities and buildability reviewed by people who will actually build the work.</p>
+      </article>
+      <article class="bn-pillar reveal">
+        <span class="bn-pillar__num">03</span>
+        <h3>Source</h3>
+        <p>Materials and skilled workforce procured against the approved specification—not the nearest substitute.</p>
+      </article>
+      <article class="bn-pillar reveal">
+        <span class="bn-pillar__num">04</span>
+        <h3>Deliver</h3>
+        <p>Transport, site handover and close-out, checked and recorded, so the project team receives exactly what was ordered.</p>
+      </article>
     </div>
   </div>
 </section>
 
+<!-- ============ 4. SERVICES ============ -->
 <section class="section section--ink services-feature">
   <div class="shell">
     <div class="section-heading section-heading--light">
@@ -60,6 +482,52 @@
   </div>
 </section>
 
+<!-- ============ 5. ADVISORY (NEW) ============ -->
+<section class="section bn-advisory">
+  <div class="shell">
+    <div class="bn-advisory__head">
+      <div>
+        <span class="eyebrow"><span></span> Project advisory</span>
+        <h2 class="display-title">From feasibility<br>to bankability.</h2>
+      </div>
+      <p class="bn-advisory__lead">
+        We support investors, businesses and project owners in designing, assessing and delivering successful investments across East Africa and beyond.
+      </p>
+    </div>
+
+    <div class="bn-advisory__grid">
+      <article class="bn-advisory__card reveal">
+        <span class="bn-advisory__num">01</span>
+        <h3>Project studies</h3>
+        <p>Feasibility, market and technical studies that establish whether a project can work—before any capital is committed.</p>
+      </article>
+      <article class="bn-advisory__card reveal">
+        <span class="bn-advisory__num">02</span>
+        <h3>Project analysis</h3>
+        <p>Financial modelling, risk and scenario analysis that test whether the numbers hold under real operating conditions.</p>
+      </article>
+      <article class="bn-advisory__card reveal">
+        <span class="bn-advisory__num">03</span>
+        <h3>Advisory</h3>
+        <p>Structuring, stakeholder alignment and delivery oversight through design, procurement and construction.</p>
+      </article>
+    </div>
+
+    <div class="bn-advisory__foot">
+      <div class="bn-advisory__audience">
+        <span>Built for</span>
+        <ul>
+          <li>Investors</li>
+          <li>Businesses</li>
+          <li>Project owners</li>
+        </ul>
+      </div>
+      <a href="{{ url_for('contact') }}" class="button button--dark">Discuss a project <i data-lucide="arrow-up-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. CIVIL WORKS ============ -->
 <section class="split-feature">
   <div class="split-feature__image">
     <img src="{{ url_for('static', filename='images/civil-works.jpg') }}" alt="Excavator operating on a building site" loading="lazy">
@@ -79,10 +547,11 @@
   </div>
 </section>
 
+<!-- ============ 7. LOGISTICS ============ -->
 <section class="section logistics-section">
   <div class="shell logistics-card">
     <div class="logistics-card__copy">
-      <span class="eyebrow eyebrow--light"><span></span> New integrated capability</span>
+      <span class="eyebrow eyebrow--light"><span></span> Integrated capability</span>
       <h2>Materials do not create value until they reach the right site.</h2>
       <p>Our transport and project-logistics service completes the procurement cycle with planned dispatch, coordinated loading, delivery documentation and site handover.</p>
       <a href="{{ url_for('service_detail', slug='transport-logistics') }}" class="button button--copper">Explore logistics <i data-lucide="arrow-up-right"></i></a>
@@ -97,6 +566,7 @@
   </div>
 </section>
 
+<!-- ============ 8. SECTORS ============ -->
 <section class="section sectors-section">
   <div class="shell">
     <div class="section-heading">
@@ -114,6 +584,7 @@
   </div>
 </section>
 
+<!-- ============ 9. PARTNERS ============ -->
 <section class="partner-strip">
   <div class="shell">
     <span class="partner-strip__label">Brands represented in our profile</span>
@@ -123,6 +594,7 @@
   </div>
 </section>
 
+<!-- ============ 10. CTA ============ -->
 <section class="section cta-section">
   <div class="shell cta-card">
     <span class="eyebrow eyebrow--light"><span></span> Start a conversation</span>
